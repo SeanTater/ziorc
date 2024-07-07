@@ -5,5 +5,12 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.86"
+axum = "0.7.5"
+chrono = { version = "0.4.38", features = ["serde"] }
+serde = { version = "1.0.204", features = ["derive"] }
+tokio = { version = "1.38.0", features = ["full"] }
+tracing = "0.1.40"
+tracing-subscriber = "0.3.18"
+uuid = { version = "1.9.1", features = ["serde", "v3", "v7"] }
 wasmtime = "22.0.0"
 wasmtime-wasi = "22.0.0"

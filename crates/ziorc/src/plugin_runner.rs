@@ -50,8 +50,10 @@ pub fn test_example() -> anyhow::Result<()> {
     wasmtime_wasi::add_to_linker_sync(&mut linker)?;
 
     let wasi = WasiCtxBuilder::new()
-        .inherit_stdio()
-        .inherit_args()
+        .inherit_network()
+        .inherit_stdout()
+        .inherit_stderr()
+        .args(&["zoinc"])
         .build();
 
     // As with the core wasm API of Wasmtime instantiation occurs within a
