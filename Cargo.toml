@@ -1,3 +1,3 @@
 [workspace]
 resolver = "2"
-members = ["crates/ziorc", "crates/ziorc-plugin", "crates/ziorc-plugin-hello-world"]
+members = ["crates/ziorc", "crates/ziorc-plugin", "crates/ziorc-plugin-example"]
