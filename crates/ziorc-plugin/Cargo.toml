@@ -1,0 +1,9 @@
+[package]
+name = "ziorc-plugin"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Tools and types for building a ziorc plugin"
+
+[dependencies]
+wasm-bindgen = "0.2.92"

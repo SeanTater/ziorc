@@ -1,0 +1,1 @@
+greet: func(name: string) -> string

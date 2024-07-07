@@ -1,0 +1,12 @@
+[package]
+name = "ziorc-plugin-hello-world"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "An example of a plugin for Ziorc"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wasm-bindgen = "0.2.92"
