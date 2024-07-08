@@ -3,7 +3,7 @@ use wasmtime::{Engine, Store};
 use wasmtime_wasi::{WasiCtx, WasiCtxBuilder, WasiView};
 
 bindgen!({
-    inline: r#"
+  inline: r#"
         package component:ziorc-plugin-example;
 
         /// An example world for the component to target.
@@ -12,14 +12,13 @@ bindgen!({
             export hello-world: func() -> string;
         }
     "#,
-  });
-
+});
 
 struct MyState {
     name: String,
     count: usize,
     wasi: WasiCtx,
-    table: ResourceTable
+    table: ResourceTable,
 }
 
 // Imports into the world, like the `name` import for this world, are
@@ -32,10 +31,12 @@ impl ExampleImports for MyState {
 
 #[test]
 pub fn test_example() -> anyhow::Result<()> {
-    
     let engine = Engine::default();
     // let module = Module::new(&engine, include_bytes!("../../ziorc-plugin-hello-world/pkg/ziorc_plugin_hello_world_bg.wasm"))?;
-    let component = Component::from_file(&engine, "../../target/wasm32-wasi/debug/ziorc_plugin_example.wasm")?;
+    let component = Component::from_file(
+        &engine,
+        "../../target/wasm32-wasi/debug/ziorc_plugin_example.wasm",
+    )?;
 
     // Instantiation of bindings always happens through a `Linker`.
     // Configuration of the linker is done through a generated `add_to_linker`
@@ -67,7 +68,7 @@ pub fn test_example() -> anyhow::Result<()> {
             name: "me".to_string(),
             count: 3,
             wasi,
-            table: ResourceTable::new()
+            table: ResourceTable::new(),
         },
     );
     let (bindings, _) = Example::instantiate(&mut store, &component, &linker)?;
@@ -77,10 +78,13 @@ pub fn test_example() -> anyhow::Result<()> {
     let output = bindings.call_hello_world(&mut store)?;
     assert_eq!(output, "Hello, World!");
     Ok(())
-
 }
 
 impl WasiView for MyState {
-    fn ctx(&mut self) -> &mut WasiCtx { &mut self.wasi }
-    fn table(&mut self) -> &mut ResourceTable { &mut self.table }
+    fn ctx(&mut self) -> &mut WasiCtx {
+        &mut self.wasi
+    }
+    fn table(&mut self) -> &mut ResourceTable {
+        &mut self.table
+    }
 }

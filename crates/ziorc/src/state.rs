@@ -1,38 +1,46 @@
-use std::sync::Arc;
 use anyhow::Result;
-use chrono::{DateTime, Utc, serde::ts_milliseconds};
+use chrono::{serde::ts_milliseconds, DateTime, Utc};
 use mdns_sd::{ServiceDaemon, ServiceInfo};
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
+use std::sync::Arc;
 use tokio::sync::RwLock;
 use uuid::Uuid;
 
-use crate::{config::AppStateConfig, discovery::{Peer, MDNS}};
+use crate::{
+    config::AppStateConfig,
+    discovery::{Peer, MDNS},
+};
 
 pub type SharedAppState = Arc<RwLock<AppState>>;
 
-
-
 pub struct AppState {
     config: AppStateConfig,
-    instance_id: Uuid,
+    myself: Peer,
     jobs: Vec<Job>,
-    mdns: MDNS
+    mdns: MDNS,
 }
 
 impl AppState {
     pub fn from_config(config: AppStateConfig) -> Result<SharedAppState> {
-        let instance_id = Uuid::now_v7(); 
-        let mdns = crate::discovery::MDNS::launch(instance_id)?;
+        let mut myself = Peer::new_localhost()?;
+        if let Some(port) = config.port {
+            myself.port = port;
+        }
+        let mdns = crate::discovery::MDNS::launch(&myself)?;
         Ok(Arc::new(RwLock::new(Self {
             config,
-            instance_id,
+            myself,
             jobs: vec![],
-            mdns
+            mdns,
         })))
     }
 
     pub fn config(&self) -> &AppStateConfig {
         &self.config
+    }
+
+    pub fn myself(&self) -> &Peer {
+        &self.myself
     }
 
     pub fn jobs(&self) -> Vec<Job> {
@@ -53,22 +61,22 @@ impl AppState {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Job {
     job_id: Uuid,
-    #[serde(with="ts_milliseconds")]
-    started_on: DateTime<Utc>
+    #[serde(with = "ts_milliseconds")]
+    started_on: DateTime<Utc>,
 }
 
 impl Job {
     fn new() -> Self {
         Self {
             job_id: Uuid::now_v7(),
-            started_on: Utc::now()
+            started_on: Utc::now(),
         }
-    }    
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Task {
     task_id: Uuid,
-    #[serde(with="ts_milliseconds")]
-    started_on: DateTime<Utc>
+    #[serde(with = "ts_milliseconds")]
+    started_on: DateTime<Utc>,
 }

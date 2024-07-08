@@ -2,11 +2,11 @@ use clap::Parser;
 use config::AppStateConfig;
 use state::AppState;
 
+mod config;
+mod discovery;
 mod plugin_runner;
 mod state;
 mod web;
-mod discovery;
-mod config;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {

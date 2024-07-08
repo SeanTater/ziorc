@@ -9,5 +9,5 @@ pub struct AppStateConfig {
 
     /// Port to run the API server on
     #[arg(long)]
-    pub port: u16
+    pub port: Option<u16>,
 }
